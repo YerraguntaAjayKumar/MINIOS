@@ -130,10 +130,12 @@ void FCFS(Process *head) {
     QNode *ready = processFCFS(tree);
     StackNode *terminated = NULL;
     int time = 0;
+    QNode *tail = ready;
+    while (tail && tail->next) tail = tail->next;
 
     printf("\n--- FCFS Schedule ---\n");
     while (ready) {
-        Process *p = dequeue(&ready, (QNode**)&ready);
+        Process *p = dequeue(&ready, &tail);
         if (time < p->arrival) time = p->arrival;
         Execute(p);
         printf("Gantt: [%d - %d] PID=%d (%s)\n",
@@ -155,10 +157,12 @@ void PriorityScheduling(Process *head) {
     QNode *ready = processPriority(tree);
     StackNode *terminated = NULL;
     int time = 0;
+    QNode *tail = ready;
+    while (tail && tail->next) tail = tail->next;
 
     printf("\n--- Priority Schedule ---\n");
     while (ready) {
-        Process *p = dequeue(&ready, (QNode**)&ready);
+        Process *p = dequeue(&ready, &tail);
         if (time < p->arrival) time = p->arrival;
         Execute(p);
         printf("Gantt: [%d - %d] PID=%d (%s) priority=%d\n",
@@ -180,10 +184,12 @@ void SJF(Process *head) {
     QNode *ready = processSJF(tree);
     StackNode *terminated = NULL;
     int time = 0;
+    QNode *tail = ready;
+    while (tail && tail->next) tail = tail->next;
 
     printf("\n--- SJF Schedule ---\n");
     while (ready) {
-        Process *p = dequeue(&ready, (QNode**)&ready);
+        Process *p = dequeue(&ready, &tail);
         if (time < p->arrival) time = p->arrival;
         Execute(p);
         printf("Gantt: [%d - %d] PID=%d (%s) burst=%d\n",
@@ -247,7 +253,7 @@ Process* addProcess(Process *head) {
     printf("\nEnter PID: ");
     scanf("%d", &n->pid);
     printf("Enter Process Name: ");
-    scanf("%s", n->name);
+    scanf("%19s", n->name);
     printf("Enter Burst Time: ");
     scanf("%d", &n->burst);
     printf("Enter Priority: ");
